@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CuestionarioController;
 use App\Http\Controllers\HuellaHidricaController;
 
+Route::get('/mapa', [CuestionarioController::class, 'mostrarMapa'])->name('mapa');
+
 Route::get('/', function () {
     return view('home');
 })->name('inicio');
-
 
 Route::get('/dashboard', function () {
     return view('preguntas/usodirecto');
