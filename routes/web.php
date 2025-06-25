@@ -7,7 +7,8 @@ use App\Http\Controllers\HuellaHidricaController;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('inicio');
+
 
 Route::get('/dashboard', function () {
     return view('preguntas/usodirecto');
