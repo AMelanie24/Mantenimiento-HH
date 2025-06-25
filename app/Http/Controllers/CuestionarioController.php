@@ -132,20 +132,21 @@ class CuestionarioController extends Controller
         return view('marcador', compact('puntuaciones'));
     }
 
-    public function mostrarMapa()
-    {
-        $respuesta = RespuestaCuestionario::where('usuario_id', Auth::id())->latest()->first();
+  public function mostrarMapa()
+{
+    $respuesta = RespuestaCuestionario::where('usuario_id', Auth::id())->latest()->first();
 
-        if (!$respuesta) {
-            return redirect()->route('cuestionario')->with('error', 'No se encontró ninguna respuesta. Por favor, completa el cuestionario primero.');
-        }
-
-        $nivel = $this->determinarNivelHuella($respuesta->puntuacion_total);
-
-        return view('mapa', [
-            'nivel' => $nivel,
-        ]);
+    if (!$respuesta) {
+        return redirect()->route('cuestionario')->with('error', 'No se encontró ninguna respuesta. Por favor, completa el cuestionario primero.');
     }
+
+    $nivel = $this->determinarNivelHuella($respuesta->puntuacion_total);
+
+    return view('mapa', [
+        'nivel' => $nivel,
+    ]);
+}
+
 
     private function determinarNivelHuella($puntuacion)
     {
