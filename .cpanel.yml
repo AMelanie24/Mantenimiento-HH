@@ -1,0 +1,37 @@
+---
+deployment:
+  tasks:
+    - export PATH=/usr/local/bin:$PATH
+
+    # Paso 1: Instalar dependencias de Composer
+    - composer install --no-dev --optimize-autoloader
+
+    # Paso 2: Instalar dependencias de npm
+    - npm install
+
+    # Paso 3: Construir los activos con Vite
+    - npm run build
+
+    # Paso 4: Configurar permisos para Laravel
+    - chmod -R 775 storage bootstrap/cache
+    - chown -R $USER:$USER storage bootstrap/cache
+
+    # Paso 5: Copiar el archivo de entorno
+    - cp .env.example .env
+
+    # Paso 6: Generar clave de aplicación
+    - php artisan key:generate
+
+    # Paso 7: Ejecutar migraciones (si corresponde)
+    - php artisan migrate --force
+
+    # Paso 8: Limpiar y optimizar cachés de Laravel
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan view:cache
+
+    # Paso 9: Crear carpeta para logs (si no existe)
+    - touch storage/logs/laravel.log
+
+    # Paso 10: Mover los archivos generados por Vite al directorio público
+    - cp -R public/build /home/<usuario>/public_html/
