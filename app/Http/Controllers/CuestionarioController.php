@@ -2,13 +2,25 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\HuellaHidricaController;
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
 use App\Models\RespuestaCuestionario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+<<<<<<< HEAD
 class CuestionarioController extends Controller
 {
     // Funciones GET para mostrar vistas
+=======
+
+class CuestionarioController extends Controller
+{
+    //Funciones get
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
     public function usodirecto() {
         return view('preguntas.usodirecto');
     }
@@ -49,6 +61,7 @@ class CuestionarioController extends Controller
         return view('preguntas.viajes');
     }
 
+<<<<<<< HEAD
     // Funciones POST para procesar respuestas
     public function submitUsoDirecto(Request $request)
 {
@@ -58,45 +71,85 @@ class CuestionarioController extends Controller
 }
     public function submitAlimentos(Request $request) {
         session(['respuestas.seccion2' => $request->only('pregunta3', 'pregunta4')]);
+=======
+
+    //Funciones submit
+    public function submitUsoDirecto(Request $request) {
+        session()->push('respuestas', $request->only('pregunta1', 'pregunta2'));
+        return redirect()->route('alimentos');
+    }
+
+    public function submitAlimentos(Request $request) {
+        session()->push('respuestas', $request->only('pregunta3', 'pregunta4'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('productosybienes');
     }
 
     public function submitProductosyBienes(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion3' => $request->only('pregunta5', 'pregunta6')]);
+=======
+        session()->push('respuestas', $request->only('pregunta5', 'pregunta6'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('transporte');
     }
 
     public function submitTransporte(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion4' => $request->only('pregunta7')]);
+=======
+        session()->push('respuestas', $request->only('pregunta7'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('electrodomesticos');
     }
 
     public function submitElectrodomesticos(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion5' => $request->only('pregunta8', 'pregunta9', 'pregunta10')]);
+=======
+        session()->push('respuestas', $request->only('pregunta8', 'pregunta9', 'pregunta10'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('hogar');
     }
 
     public function submitHogar(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion6' => $request->only('pregunta11', 'pregunta12')]);
+=======
+        session()->push('respuestas', $request->only('pregunta11', 'pregunta12'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('energia');
     }
 
     public function submitEnergia(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion7' => $request->only('pregunta13', 'pregunta14')]);
+=======
+        session()->push('respuestas', $request->only('pregunta13', 'pregunta14'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('jardineria');
     }
 
     public function submitJardineria(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion8' => $request->only('pregunta15', 'pregunta16')]);
+=======
+        session()->push('respuestas', $request->only('pregunta15', 'pregunta16'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('papel');
     }
 
     public function submitPapel(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion9' => $request->only('pregunta17', 'pregunta18')]);
+=======
+        session()->push('respuestas', $request->only('pregunta17', 'pregunta18'));
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
         return redirect()->route('viajes');
     }
 
     public function submitViajes(Request $request) {
+<<<<<<< HEAD
         session(['respuestas.seccion10' => $request->only('pregunta19', 'pregunta20')]);
         return redirect()->route('puntaje');
     }
@@ -156,10 +209,41 @@ private function calcularImpactoAmbiental($puntuacion)
         $puntuaciones = RespuestaCuestionario::with('user')
                         ->orderBy('puntuacion_total', 'desc')
                         ->get();
+=======
+        session()->push('respuestas', $request->only('pregunta19', 'pregunta20'));
+        return redirect()->route('cuestionario.puntaje');
+    }
+
+
+    public function resultado(Request $request) {
+        $respuestas = session('respuestas');
+        $puntuacion = 0;
+
+        foreach ($respuestas as $respuesta) {
+            $puntuacion += array_sum($respuesta);
+        }
+
+        $usuarioId = Auth::id();
+
+        $respuestaCuestionario = new RespuestaCuestionario();
+        $respuestaCuestionario->usuario_id = $usuarioId;
+        $respuestaCuestionario->respuestas = $respuestas;  
+        $respuestaCuestionario->puntuacion_total = $puntuacion; 
+        $respuestaCuestionario->save();
+
+        return view('puntaje', ['puntuacion' => $puntuacion]);
+        return redirect()->route('cuestionario.puntuacion');
+    }
+
+    public function puntuaciones($puntuacion)
+    {
+        $puntuacion = RespuestaCuestionario::with('usuario')->get();
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
 
         return view('marcador', compact('puntuaciones'));
     }
 
+<<<<<<< HEAD
     // Mostrar mapa
     public function mostrarMapa()
     {
@@ -195,3 +279,33 @@ private function calcularImpactoAmbiental($puntuacion)
         return 'muy_alta';
     }
 }
+=======
+    public function mostrarMapa()
+    {
+        $respuesta = RespuestaCuestionario::where('usuario_id', Auth::id())->latest()->first();
+
+        if (!$respuesta) {
+            return redirect()->route('cuestionario')->with('error', 'No se encontró ninguna respuesta. Por favor, completa el cuestionario primero.');
+        }
+
+        $nivel = $this->determinarNivelHuella($respuesta->puntuacion_total);
+
+        return view('mapa', [
+            'nivel' => $nivel,
+        ]);
+    }
+
+    private function determinarNivelHuella($puntuacion)
+    {
+        if ($puntuacion <= 30) {
+            return 'baja'; 
+        } elseif ($puntuacion <= 45) {
+            return 'moderada'; 
+        } elseif ($puntuacion <= 55) {
+            return 'alta'; 
+        } else {
+            return 'muy_alta'; 
+        }
+    }
+}
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784

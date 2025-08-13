@@ -34,9 +34,12 @@ class RespuestaCuestionario extends Model
         return $this->belongsTo(User::class, 'puntuacion_total');
     }
 
+<<<<<<< HEAD
     public function user()
 {
     return $this->belongsTo(User::class);
 }
 
+=======
+>>>>>>> 0091282c377ec77e460aa46baed9f508c9bad784
 }
